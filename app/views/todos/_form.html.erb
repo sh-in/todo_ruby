@@ -27,8 +27,9 @@
   </div>
 
   <div>
-    <%= form.label :user_id, style: "display: block" %>
-    <%= form.text_field :user_id %>
+    <%# <%= form.label :user_id, style: "display: block" %> 
+    <%= form.hidden_field :user_id, value:session[:user_id] %>
+    <%# <%= form.text_field :user_id%> 
   </div>
 
   <div>
