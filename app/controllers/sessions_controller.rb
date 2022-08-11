@@ -3,17 +3,24 @@ class SessionsController < ApplicationController
   end
 
   def create
-    user_name = params[:name]
-    user = User.find_by(name: user_name)
+    user = User.find_by(name: params[:name])
 
-    if user && user.authenticate(params[:sessions][:password])
-      User.log_in(user)
-      redirect_to root_url, notice: "ログインしました"
+    if !User.find_by(id: session[:user_id]).nil?
+      flash[:alert] = "先にログアウトしてください"
+      redirect_to login_url
+    elsif user && user.authenticate(params[:password])
+      session[:user_id] = user.id
+      flash[:notice] = "ログインしました"
+      redirect_to todos_url
     else
-      redirect_to "login_url", alert: "ログイン名もしくはパスワードが間違っています"
+      flash[:alert] ="ログイン名もしくはパスワードが間違っています"
+      redirect_to login_url
     end
   end
 
   def destroy
+    session[:user_id] = nil
+    flash[:notice] = "ログアウトしました"
+    redirect_to login_url
   end
 end
